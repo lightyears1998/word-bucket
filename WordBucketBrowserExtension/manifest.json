@@ -14,6 +14,7 @@
     "storage",
     "http://*/*",
     "https://*/*",
+    "file://*/*",
     "tabs",
     "alarms"
   ],
@@ -22,7 +23,8 @@
       "match_about_blank": true,
       "matches": [
         "http://*/*",
-        "https://*/*"
+        "https://*/*",
+        "file://*/*"
       ],
       "js": [
         "js/lib/jquery-3.6.4.min.js",
