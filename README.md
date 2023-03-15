@@ -2,12 +2,12 @@
 
 ## 技术路线
 
-- **同步服务器** ASP .NET, Entity Framework
-- **同步功能** JWT, protobuf
-- **前端** Avalonia UI
+- **客户端** Avalonia UI, Entity Framework (SQLite)
 - **收纳**
   - 浏览器插件
   - PDF Parser (PDF Pig)
+- **同步** JWT, protobuf
+  - 同步服务器 ASP .NET, Entity Framework (PostgreSQL)
 - **词典** 采集自互联网
 
 ## 用户提示

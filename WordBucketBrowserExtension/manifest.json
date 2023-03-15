@@ -1,0 +1,40 @@
+{
+  "manifest_version": 2,
+  "name": "WordBucket",
+  "version": "1.0",
+  "description": "WordBucket Browser Extension",
+  "icons": {
+    "48": "icon.svg",
+    "96": "icon.svg"
+  },
+  "permissions": [
+    "<all_urls>",
+    "activeTab",
+    "contextMenus",
+    "storage",
+    "http://*/*",
+    "https://*/*",
+    "tabs",
+    "alarms"
+  ],
+  "content_scripts": [
+    {
+      "match_about_blank": true,
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "js/lib/jquery-3.6.4.min.js",
+        "js/main.js"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "background":{
+    "scripts":[
+      "js/lib/jquery-3.6.4.min.js",
+      "js/background.js"
+    ]
+  }
+}
