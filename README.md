@@ -2,7 +2,7 @@
 
 ## 技术路线
 
-- **客户端** MAUI, Entity Framework (SQLite)
+- **客户端** Avalonia UI, Entity Framework (SQLite)
 - **收纳**
   - 浏览器插件
   - PDF Parser (PDF Pig)

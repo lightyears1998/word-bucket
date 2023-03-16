@@ -7,8 +7,8 @@ browser.contextMenus.create({
 });
 
 browser.contextMenus.onClicked.addListener((info, tab) => {
-  console.log(info);
-  console.log(tab);
+  console.log('a', info);
+  console.log('b', tab);
   getSelectedText(makeSaveMaterialRequest);
 });
 
