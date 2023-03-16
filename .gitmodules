@@ -1,6 +1,3 @@
 [submodule "Data/english-wordlists"]
 	path = Data/english-wordlists
 	url = https://github.com/mahavivo/english-wordlists.git
-[submodule "Data/english-dictionary"]
-	path = Data/english-dictionary
-	url = https://github.com/mahavivo/english-dictionary
