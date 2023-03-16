@@ -2,7 +2,7 @@
 {
     public record class LearningWord
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
 
         public string Spelling { get; set; } = string.Empty;
 

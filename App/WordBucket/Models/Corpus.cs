@@ -1,8 +1,8 @@
 ﻿namespace WordBucket.Models
 {
-    public class Corpus
+    public record class Corpus
     {
-        public int? Id { set; get; }
+        public int Id { set; get; }
 
         public string Text { set; get; } = string.Empty;
     }

@@ -1,8 +1,8 @@
 ﻿namespace WordBucket.Models
 {
-    public record class WordFrequency
+    public record class CollinsWordFrequency
     {
-        public int? Id { set; get; }
+        public int Id { set; get; }
 
         public string Spelling { set; get; } = string.Empty;
 
