@@ -7,7 +7,7 @@
   - 浏览器插件
   - PDF Parser (PDF Pig)
 - **同步** JWT, protobuf
-  - 同步服务器 ASP .NET, Entity Framework (PostgreSQL)
+  - 同步服务器 ASP .NET, Entity Framework (SQLite)
 - **词典** 采集自互联网
 
 ## 用户提示

@@ -1,10 +1,7 @@
-﻿using SQLite;
-
-namespace WordBucket.Models
+﻿namespace WordBucket.Models
 {
-    public class WordFrequency
+    public record class WordFrequency
     {
-        [PrimaryKey]
         public int? Id { set; get; }
 
         public string Spelling { set; get; } = string.Empty;
