@@ -10,16 +10,6 @@ namespace WordBucket.Contexts
     {
         public string DbPath { get; set; }
 
-        public string DefaultUserDataDbPath
-        {
-            get
-            {
-                var folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                var platform = AvaloniaLocator.Current.GetService<IRuntimePlatform>()!;
-                platform.GetRuntimeInfo()
-            }
-        }
-
         public DbSet<LearningWord> LearningWords { set; get; }
 
         public UserContext(string dbPath)

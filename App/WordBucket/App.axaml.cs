@@ -22,6 +22,8 @@ public partial class App : Application
                 DataContext = new MainViewModel(),
                 Topmost = true
             };
+
+            CreateFolders();
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
@@ -32,5 +34,14 @@ public partial class App : Application
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    private void CreateFolders()
+    {
+        var folders = AppConfig.AutoCreateFolders;
+        foreach (var folder in folders)
+        {
+            System.IO.Directory.CreateDirectory(folder);
+        }
     }
 }
