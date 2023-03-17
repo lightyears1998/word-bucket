@@ -12,5 +12,16 @@
     <vm:MainViewModel />
   </Design.DataContext>
 
-  <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+  <StackPanel Margin="16">
+    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+    <StackPanel>
+      <StackPanel Orientation="Horizontal" Spacing="16">
+        <RadioButton Content="忽略"></RadioButton>
+        <RadioButton Content="陌生"></RadioButton>
+        <RadioButton Content="遭遇"></RadioButton>
+        <RadioButton Content="熟悉"></RadioButton>
+        <RadioButton Content="掌握"></RadioButton>
+      </StackPanel>
+    </StackPanel>
+  </StackPanel>
 </UserControl>

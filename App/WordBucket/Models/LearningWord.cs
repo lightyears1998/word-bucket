@@ -13,8 +13,9 @@
     {
         Ignored = -1,
         None = 0,
-        Known = 1,
-        Familiar = 2,
-        Mastered = 3,
+        Encountered = 1,
+        Known = 2,
+        Familiar = 3,
+        Mastered = 4,
     }
 }
