@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
+             x:Class="WordBucket.Views.MemoryView">
+  <DockPanel Margin="16">
+    <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center" Spacing="8" Orientation="Horizontal">
+      <CheckBox x:Name="ShowDefinitionsCheckBox" Content="显示释义" />
+      <Button Content="切换语料" />
+    </StackPanel>
+
+    <StackPanel
+      DockPanel.Dock="Bottom"
+      HorizontalAlignment="Center"
+      Orientation="Horizontal"
+      Spacing="16">
+      <RadioButton Content="陌生" />
+      <RadioButton Content="熟悉" />
+      <RadioButton Content="掌握" />
+      <Button Content="下一个词汇" />
+    </StackPanel>
+
+    <StackPanel HorizontalAlignment="Center" Spacing="32">
+      <TextBlock FontSize="64">polymorphism</TextBlock>
+      <StackPanel Spacing="16">
+        <TextBlock IsVisible="{Binding ElementName=ShowDefinitionsCheckBox, Path=IsChecked}">n. 多态</TextBlock>
+        <TextBlock>Polymorphism is the ability of an object to take on many forms.</TextBlock>
+        <TextBlock FontStyle="Italic">Polymorphism in Dart</TextBlock>
+      </StackPanel>
+    </StackPanel>
+  </DockPanel>
+</UserControl>

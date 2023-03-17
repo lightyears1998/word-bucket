@@ -6,6 +6,8 @@
 
         public string Spelling { get; set; } = string.Empty;
 
+        public string PhoneticSymbols { set; get; } = string.Empty;
+
         public string Definitions { get; set; } = string.Empty;
     }
 }

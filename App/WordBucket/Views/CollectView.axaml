@@ -1,0 +1,37 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
+             x:Class="WordBucket.Views.CollectView">
+
+  <DockPanel Margin="16">
+    <Grid
+      VerticalAlignment="Stretch"
+      HorizontalAlignment="Stretch"
+      RowDefinitions="*, Auto, *">
+      <TextBox Grid.Row="0" AcceptsReturn="True" TextWrapping="Wrap" />
+
+      <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="16" Margin="0, 16">
+        <Button Content="查询" />
+        <Button Content="收纳" />
+      </StackPanel>
+
+      <ScrollViewer Grid.Row="2">
+        <StackPanel Orientation="Vertical" Spacing="16">
+          <Grid ColumnDefinitions="*, Auto">
+            <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center">abandon</TextBlock>
+            <StackPanel Grid.Column="1" DockPanel.Dock="Right" Orientation="Horizontal" Spacing="16">
+              <RadioButton Content="忽略" />
+              <RadioButton Content="无" />
+              <RadioButton Content="陌生" />
+              <RadioButton Content="熟悉" />
+              <RadioButton Content="掌握" />
+            </StackPanel>
+          </Grid>
+          <TextBlock>n. 遗弃</TextBlock>
+        </StackPanel>
+      </ScrollViewer>
+    </Grid>
+  </DockPanel>
+</UserControl>

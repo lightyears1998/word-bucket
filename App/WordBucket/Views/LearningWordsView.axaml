@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="WordBucket.Views.LearningWordsView">
+  <DockPanel>
+    <StackPanel DockPanel.Dock="Top" Spacing="8" Orientation="Horizontal">
+      <Button>添加词汇</Button>
+      <Button>删除词汇</Button>
+    </StackPanel>
+
+    <StackPanel DockPanel.Dock="Right" Spacing="4">
+      <Label>拼写</Label>
+      <TextBox TextWrapping="Wrap"></TextBox>
+
+      <Label>释义</Label>
+      <TextBox
+        Height="80"
+        AcceptsReturn="True"
+        TextWrapping="Wrap"></TextBox>
+
+      <Label>关联语料</Label>
+      <Label>Todo</Label>
+
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <Button>保存</Button>
+        <Button>取消</Button>
+      </StackPanel>
+    </StackPanel>
+
+    <ScrollViewer>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

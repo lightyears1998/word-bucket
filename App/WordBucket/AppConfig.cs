@@ -1,11 +1,14 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
 namespace WordBucket
 {
     public static class AppConfig
     {
         public static string AppName => "WordBucket";
+
+        public static int MainWindowHeight => 450;
+
+        public static int MainWindowWidth => 600;
 
         public static string DefaultUserDataDbPath
         {
@@ -17,5 +20,7 @@ namespace WordBucket
         }
 
         public static string[] AutoCreateFolders => new[] { DefaultUserDataDbPath };
+
+        public static int HttpListenerPort => 51238;
     }
 }

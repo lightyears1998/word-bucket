@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using WordBucket.Services;
 using WordBucket.ViewModels;
 using WordBucket.Views;
 
@@ -20,10 +21,14 @@ public partial class App : Application
             desktop.MainWindow = new MainWindow
             {
                 DataContext = new MainViewModel(),
-                Topmost = true
+                Topmost = true,
+                Height = AppConfig.MainWindowHeight,
+                Width = AppConfig.MainWindowWidth,
+                WindowStartupLocation = Avalonia.Controls.WindowStartupLocation.CenterScreen
             };
 
             CreateFolders();
+            Task.Run(CollectorService.Instance.InitializeAsync);
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
@@ -36,7 +41,7 @@ public partial class App : Application
         base.OnFrameworkInitializationCompleted();
     }
 
-    private void CreateFolders()
+    private static void CreateFolders()
     {
         var folders = AppConfig.AutoCreateFolders;
         foreach (var folder in folders)

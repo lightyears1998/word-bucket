@@ -1,4 +1,6 @@
-﻿namespace WordBucket.Models
+﻿using System.Collections.Generic;
+
+namespace WordBucket.Models
 {
     public record class LearningWord
     {
@@ -6,16 +8,19 @@
 
         public string Spelling { get; set; } = string.Empty;
 
+        public string Definitions { get; set; } = string.Empty;
+
         public LearningProgress Progress { get; set; } = LearningProgress.None;
+
+        public List<Corpus> Corpuses { get; set; } = new();
     }
 
     public enum LearningProgress
     {
         Ignored = -1,
         None = 0,
-        Encountered = 1,
-        Known = 2,
-        Familiar = 3,
-        Mastered = 4,
+        Unfamiliar = 1,
+        Familiar = 2,
+        Mastered = 3,
     }
 }
