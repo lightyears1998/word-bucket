@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\App\WordBucket\WordBucket.csproj" />
+    <ProjectReference Include="..\WordBucket\WordBucket.csproj" />
   </ItemGroup>
 
 </Project>

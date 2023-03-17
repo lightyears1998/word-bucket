@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using CommunityToolkit.Diagnostics;
 using WordBucket.Services;
 using WordBucket.ViewModels;
 using WordBucket.Views;
@@ -28,7 +29,8 @@ public partial class App : Application
             };
 
             CreateFolders();
-            Task.Run(CollectorService.Instance.InitializeAsync);
+            InitializeServices();
+            desktop.MainWindow.Closed += (_, _) => StopServices();
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
@@ -36,17 +38,29 @@ public partial class App : Application
             {
                 DataContext = new MainViewModel()
             };
+
+            ThrowHelper.ThrowPlatformNotSupportedException();
         }
 
         base.OnFrameworkInitializationCompleted();
     }
 
+    private static void InitializeServices()
+    {
+        Task.Run(CollectorService.Instance.InitializeAsync);
+    }
+
+    private static void StopServices()
+    {
+        CollectorService.Instance.Stop();
+    }
+
     private static void CreateFolders()
     {
-        var folders = AppConfig.AutoCreateFolders;
-        foreach (var folder in folders)
+        var directories = AppConfig.AutoCreateDirectories;
+        foreach (var directory in directories)
         {
-            System.IO.Directory.CreateDirectory(folder);
+            System.IO.Directory.CreateDirectory(directory);
         }
     }
 }

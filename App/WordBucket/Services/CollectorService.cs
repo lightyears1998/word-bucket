@@ -1,5 +1,4 @@
-﻿using ReactiveUI;
-using System.ComponentModel.Design.Serialization;
+﻿using System.Diagnostics;
 using System.Net;
 
 namespace WordBucket.Services
@@ -9,41 +8,68 @@ namespace WordBucket.Services
         private CollectorService()
         { }
 
-        public static CollectorService Instance => new();
+        private static readonly CollectorService _instance = new();
 
-        private HttpListener _httpListener = new();
+        public static CollectorService Instance => _instance;
+
+        private HttpListener? _httpListener;
+
+        private Thread? _listenerThread;
+
+        private CancellationTokenSource? _tokenSource;
 
         public override async Task InitializeAsync()
         {
-            InitializeHttpListener();
             await base.InitializeAsync();
+            InitializeHttpListener();
         }
 
         public void InitializeHttpListener()
         {
             string listenAddress = $"http://localhost:{AppConfig.HttpListenerPort}/";
 
+            _httpListener = new();
             _httpListener.Prefixes.Add(listenAddress);
+            _tokenSource = new CancellationTokenSource();
 
-            Thread thread = new Thread(() =>
+            _listenerThread = new(() =>
             {
                 _httpListener.Start();
 
-                while (true)
+                while (!_tokenSource.Token.IsCancellationRequested)
                 {
-                    var context = _httpListener.GetContext();
-                    var request = context.Request;
-                    var response = context.Response;
+                    try
+                    {
+                        var context = _httpListener.GetContext();
+                        var request = context.Request;
+                        var response = context.Response;
 
-                    var responseString = "Hello, world!";
-                    var responseBuffer = System.Text.Encoding.UTF8.GetBytes(responseString);
+                        var responseString = "OK.";
+                        var responseBuffer = System.Text.Encoding.UTF8.GetBytes(responseString);
 
-                    response.ContentLength64 = responseBuffer.Length;
-                    response.OutputStream.Write(responseBuffer, 0, responseBuffer.Length);
-                    response.OutputStream.Close();
+                        response.ContentLength64 = responseBuffer.Length;
+                        response.OutputStream.Write(responseBuffer, 0, responseBuffer.Length);
+                        response.OutputStream.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.WriteLine($"{nameof(CollectorService)} {ex}");
+                    }
                 }
             });
-            thread.Start();
+
+            _listenerThread.Start();
+        }
+
+        public void Stop()
+        {
+            _tokenSource?.Cancel();
+            _httpListener?.Stop();
+            _listenerThread?.Join();
+
+            _tokenSource = null;
+            _httpListener = null;
+            _listenerThread = null;
         }
     }
 }

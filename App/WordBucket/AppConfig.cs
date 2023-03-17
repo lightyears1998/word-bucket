@@ -10,7 +10,7 @@ namespace WordBucket
 
         public static int MainWindowWidth => 600;
 
-        public static string DefaultUserDataDbPath
+        public static string ApplicationDataDirectory
         {
             get
             {
@@ -19,8 +19,12 @@ namespace WordBucket
             }
         }
 
-        public static string[] AutoCreateFolders => new[] { DefaultUserDataDbPath };
+        public static string DefaultUserDataDbPath => Path.Join(ApplicationDataDirectory, "./UserData.SQLite3");
 
-        public static int HttpListenerPort => 51238;
+        public static string DefaultDictionaryDataDbPath => Path.Join(ApplicationDataDirectory, "./Dictionary.SQLite3");
+
+        public static string[] AutoCreateDirectories => new[] { ApplicationDataDirectory };
+
+        public static int HttpListenerPort => 9123;
     }
 }

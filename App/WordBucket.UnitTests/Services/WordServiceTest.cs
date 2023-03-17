@@ -14,11 +14,5 @@ namespace WordBucket.UnitTests.Services
             var result = WordService.TryLemmatize(word);
             Assert.Contains(lemma, result);
         }
-
-        [Fact]
-        public void f()
-        {
-            var path = AppConfig.DefaultUserDataDbPath;
-        }
     }
 }

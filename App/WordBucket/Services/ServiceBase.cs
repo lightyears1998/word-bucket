@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WordBucket.Services
+﻿namespace WordBucket.Services
 {
     public class ServiceBase
     {
@@ -12,8 +6,8 @@ namespace WordBucket.Services
 
         public virtual async Task InitializeAsync()
         {
-            await Task.CompletedTask;
             IsInitialize = true;
+            await Task.CompletedTask;
         }
     }
 }
