@@ -11,9 +11,11 @@ namespace WordBucket.Contexts
 
         public DbSet<DictionaryEntry> DictionaryEntries { set; get; }
 
+        public DbSet<CollinsWordFrequency> Collins { set; get; }
+
         public DictionaryContext(string? dbPath = null)
         {
-            DbPath = dbPath ?? "Assets/dictionary.sqlite3";
+            DbPath = dbPath ?? AppConfig.DefaultDictionaryDataDbPath;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

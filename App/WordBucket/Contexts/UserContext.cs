@@ -1,7 +1,4 @@
-﻿using Avalonia;
-using Avalonia.Platform;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using Microsoft.EntityFrameworkCore;
 using WordBucket.Models;
 
 namespace WordBucket.Contexts
@@ -12,9 +9,14 @@ namespace WordBucket.Contexts
 
         public DbSet<LearningWord> LearningWords { set; get; }
 
-        public UserContext(string dbPath)
+        public DbSet<Corpus> Corpuses { set; get; }
+
+        public UserContext(string? dbPath = null)
         {
-            DbPath = dbPath;
+            DbPath = dbPath ?? AppConfig.DefaultUserDataDbPath;
         }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+            => optionsBuilder.UseSqlite($"Data Source={DbPath}");
     }
 }
