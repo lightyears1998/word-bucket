@@ -26,5 +26,8 @@
     <TabItem Header="语料">
       <v:CorpusView />
     </TabItem>
+    <TabItem Header="设置">
+      <vm:SettingsViewModel />
+    </TabItem>
   </TabControl>
 </UserControl>

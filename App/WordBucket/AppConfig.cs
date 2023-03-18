@@ -19,6 +19,8 @@ namespace WordBucket
             }
         }
 
+        public static string DefaultUserSettingsPath => Path.Join(ApplicationDataDirectory, "./UserSettings.JSON");
+
         public static string DefaultUserDataDbPath => Path.Join(ApplicationDataDirectory, "./UserData.SQLite3");
 
         public static string DefaultDictionaryDataDbPath => Path.Join(ApplicationDataDirectory, "./Dictionary.SQLite3");

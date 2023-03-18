@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:WordBucket.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
+             x:Class="WordBucket.Views.SettingsView"
+             x:DataType="vm:SettingsViewModel">
+  <StackPanel HorizontalAlignment="Center">
+    <CheckBox IsChecked="{Binding AlwaysOnTop}">将程序窗口置于顶层</CheckBox>
+    <Button Command="{Binding OpenDataDirectoryCommand}" Content="打开数据文件夹" />
+  </StackPanel>
+</UserControl>
