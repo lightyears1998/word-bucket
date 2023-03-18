@@ -1,4 +1,5 @@
 ﻿using System.Data.Common;
+using WordBucket.Contexts;
 using WordBucket.Models;
 using WordBucket.Services;
 
@@ -8,7 +9,7 @@ namespace WordBucket.DataMaker
     {
         public static void Main(string[] args)
         {
-            EnglishChineseDictionaryService db = new("./dictionary.sqlite3");
+            DictionaryContext db = new("./dictionary.sqlite3");
             var dictionary = new EnglishChineseDictionary { Name = "C" };
             db.Add(dictionary);
             db.SaveChanges();

@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Terminal.Gui" Version="1.10.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\App\WordBucket\WordBucket.csproj" />
   </ItemGroup>
 </Project>
