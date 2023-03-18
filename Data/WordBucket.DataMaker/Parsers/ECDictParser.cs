@@ -64,11 +64,15 @@ namespace WordBucket.DataMaker.Parsers
 
         private static void SetupDictionary()
         {
-            Dictionary dict = new() { Name = DictionaryName };
+            using var context = new DictionaryContext();
 
-            var context = new DictionaryContext();
-            context.Add(dict);
-            context.SaveChanges();
+            if (!context.Dictionaries.Any(dict => dict.Name == DictionaryName))
+            {
+                Dictionary dict = new() { Name = DictionaryName };
+
+                context.Add(dict);
+                context.SaveChanges();
+            }
         }
 
         private static IEnumerable<ECDictEntry> ReadData(string path)
@@ -80,10 +84,9 @@ namespace WordBucket.DataMaker.Parsers
             {
                 PrepareHeaderForMatch = args => args.Header.ToLower()
             });
-            var records = csv.GetRecords<ECDictEntry>();
+            var records = csv.GetRecords<ECDictEntry>().ToList();
 
             Console.WriteLine("Finished.");
-
             return records;
         }
 

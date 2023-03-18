@@ -17,14 +17,14 @@ namespace WordBucket.DataMaker
 
             var workingDirectoryLabel = new Label()
             {
-                Text = $"Working Directory: {AppConfig.WorkingDirectory}\n",
+                Text = $"Working Directory: {AppConfig.WorkingDirectory}",
                 Y = Pos.Bottom(assemblyLocationLabel)
             };
 
             var actionHeader = new Label()
             {
                 Text = "Actions:",
-                Y = Pos.Bottom(workingDirectoryLabel)
+                Y = Pos.Bottom(workingDirectoryLabel) + 1
             };
 
             var openApplicationDataDirectoryButton = new Button()
@@ -65,10 +65,24 @@ namespace WordBucket.DataMaker
                 CollinsParser.Parse(dialog.FilePath.ToString()!);
             };
 
+            var parseECDictButton = new Button()
+            {
+                Text = "Parse ECDict",
+                Y = Pos.Bottom(parseCollinsButton)
+            };
+
+            parseECDictButton.Clicked += () =>
+            {
+                var dialog = new OpenDialog("Select ECDict Path", "Select the ECDict csv file.", new List<string> { ".csv" }, OpenDialog.OpenMode.File);
+                Application.Run(dialog);
+                Application.RequestStop();
+                ECDictParser.Parse(dialog.FilePath.ToString()!);
+            };
+
             var exitButton = new Button()
             {
                 Text = "Exit",
-                Y = Pos.Bottom(parseCollinsButton)
+                Y = Pos.Bottom(parseECDictButton)
             };
 
             exitButton.Clicked += () =>
@@ -82,6 +96,7 @@ namespace WordBucket.DataMaker
                 openApplicationDataDirectoryButton,
                 createDatabaseButton,
                 parseCollinsButton,
+                parseECDictButton,
                 exitButton);
         }
     }
