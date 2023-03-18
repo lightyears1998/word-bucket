@@ -13,12 +13,24 @@
       HorizontalAlignment="Stretch"
       RowDefinitions="Auto, Auto, *">
 
-      <TextBox
-        Grid.Row="0"
-        Height="120"
-        AcceptsReturn="True"
-        TextWrapping="Wrap"
-        Text="{Binding SearchText}" />
+      <DockPanel Grid.Row="0">
+        <StackPanel
+          DockPanel.Dock="Right"
+          Margin="8, 0, 0, 0">
+
+          <Label>来源</Label>
+          <TextBox Text="{Binding CorpusSource}" />
+
+          <Label>链接</Label>
+          <TextBox Text="{Binding CorpusUri}" />
+        </StackPanel>
+
+        <TextBox
+          Height="120"
+          AcceptsReturn="True"
+          TextWrapping="Wrap"
+          Text="{Binding SearchText}" />
+      </DockPanel>
 
       <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="16" Margin="0, 16">
         <Button Content="查询" Command="{Binding QueryCommand}" />

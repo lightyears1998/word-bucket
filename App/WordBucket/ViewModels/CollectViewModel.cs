@@ -1,5 +1,6 @@
 ﻿using ReactiveUI;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Windows.Input;
 using WordBucket.Contexts;
@@ -18,6 +19,22 @@ namespace WordBucket.ViewModels
             set => this.RaiseAndSetIfChanged(ref _searchText, value);
         }
 
+        private string _corpusSource = string.Empty;
+
+        public string CorpusSource
+        {
+            get => _corpusSource;
+            set => this.RaiseAndSetIfChanged(ref _corpusSource, value);
+        }
+
+        private string _corpusUri = string.Empty;
+
+        public string CorpusUri
+        {
+            get => _corpusUri;
+            set => this.RaiseAndSetIfChanged(ref _corpusUri, value);
+        }
+
         public ICommand QueryCommand { get; }
 
         public ICommand CollectCommand { get; }
@@ -34,6 +51,8 @@ namespace WordBucket.ViewModels
         public void SearchByText()
         {
             SearchText = SearchText.Trim();
+            CorpusSource = CorpusSource.Trim();
+            CorpusUri = CorpusUri.Trim();
 
             var inputWords = SearchText.Split(" ");
             HashSet<string> candidateWords = new();
