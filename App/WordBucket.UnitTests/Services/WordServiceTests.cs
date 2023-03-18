@@ -2,7 +2,7 @@ using WordBucket.Services;
 
 namespace WordBucket.UnitTests.Services
 {
-    public class WordServiceTest
+    public class WordServiceTests
     {
         [Theory]
         [InlineData("shopping", "shop")]

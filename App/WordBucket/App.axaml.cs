@@ -22,15 +22,14 @@ public partial class App : Application
             desktop.MainWindow = new MainWindow
             {
                 DataContext = new MainViewModel(),
-                Topmost = true,
+                Topmost = UserSettings.Current.MainWindowAlwaysOnTop,
                 Height = AppConfig.MainWindowHeight,
                 Width = AppConfig.MainWindowWidth,
                 WindowStartupLocation = Avalonia.Controls.WindowStartupLocation.CenterScreen
             };
 
-            CreateFolders();
-            InitializeServices();
-            desktop.MainWindow.Closed += (_, _) => StopServices();
+            StartUp();
+            desktop.MainWindow.Closed += (_, _) => CleanUp();
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
@@ -45,9 +44,19 @@ public partial class App : Application
         base.OnFrameworkInitializationCompleted();
     }
 
-    private static void InitializeServices()
+    private static void StartUp()
     {
-        Task.Run(CollectorService.Instance.InitializeAsync);
+        CreateFolders();
+        InitializeServices();
+    }
+
+    private static void CleanUp()
+    {
+        StopServices();
+        if (UserSettings.Current.DetectChanges())
+        {
+            UserSettings.Current.Save();
+        }
     }
 
     private static void StopServices()
@@ -62,5 +71,10 @@ public partial class App : Application
         {
             System.IO.Directory.CreateDirectory(directory);
         }
+    }
+
+    private static void InitializeServices()
+    {
+        Task.Run(CollectorService.Instance.InitializeAsync);
     }
 }

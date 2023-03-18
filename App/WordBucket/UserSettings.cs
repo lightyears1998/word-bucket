@@ -3,9 +3,11 @@ using System.Text.Json;
 
 namespace WordBucket
 {
-    public class UserSettings
+    public record class UserSettings
     {
-        private UserSettings()
+        public bool MainWindowAlwaysOnTop { set; get; } = true;
+
+        public UserSettings()
         { }
 
         private static UserSettings? _current;
@@ -19,11 +21,31 @@ namespace WordBucket
             }
         }
 
+        private UserSettings? _previousSettings;
+
+        public bool DetectChanges()
+        {
+            if (_previousSettings == null)
+            {
+                return true;
+            }
+
+            return _previousSettings != this;
+        }
+
         private static UserSettings Load(string? settingsPath = null)
         {
             settingsPath ??= AppConfig.DefaultUserSettingsPath;
+
+            if (!File.Exists(settingsPath))
+            {
+                return new UserSettings();
+            }
             var settingsText = File.ReadAllText(settingsPath);
-            return JsonSerializer.Deserialize<UserSettings>(settingsText)!;
+
+            var settings = JsonSerializer.Deserialize<UserSettings>(settingsText)!;
+            settings._previousSettings = settings with { };
+            return settings;
         }
 
         public void Save(string? settingsPath = null)

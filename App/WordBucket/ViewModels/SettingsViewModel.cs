@@ -11,18 +11,24 @@ namespace WordBucket.ViewModels
 {
     public class SettingsViewModel : ViewModelBase
     {
-        private bool _alwaysOnTop = false;
+        private bool _alwaysOnTop;
 
         public bool AlwaysOnTop
         {
             get => _alwaysOnTop;
-            set => this.RaiseAndSetIfChanged(ref _alwaysOnTop, value);
+            set
+            {
+                UserSettings.Current.MainWindowAlwaysOnTop = value;
+                this.RaiseAndSetIfChanged(ref _alwaysOnTop, value);
+            }
         }
 
         public ICommand OpenDataDirectoryCommand { get; }
 
         public SettingsViewModel()
         {
+            _alwaysOnTop = UserSettings.Current.MainWindowAlwaysOnTop;
+
             OpenDataDirectoryCommand = ReactiveCommand.CreateFromTask(async () =>
             {
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -39,10 +45,10 @@ namespace WordBucket.ViewModels
 
             this.WhenPropertyChanged(x => x.AlwaysOnTop)
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(_ => SetAlwaysOnTop());
+                .Subscribe(_ => ToggleMainWindowAlwaysOnTop());
         }
 
-        public void SetAlwaysOnTop()
+        public void ToggleMainWindowAlwaysOnTop()
         {
             if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
