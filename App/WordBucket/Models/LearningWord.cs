@@ -12,6 +12,8 @@ namespace WordBucket.Models
 
         public LearningProgress Progress { get; set; } = LearningProgress.None;
 
+        public DateTime LastVisit { get; set; }
+
         public List<Corpus> Corpuses { get; set; } = new();
     }
 

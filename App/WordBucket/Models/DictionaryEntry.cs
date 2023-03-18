@@ -4,6 +4,8 @@
     {
         public int Id { get; set; }
 
+        public Dictionary? Dictionary { get; set; }
+
         public string Spelling { get; set; } = string.Empty;
 
         public string PhoneticSymbols { set; get; } = string.Empty;
