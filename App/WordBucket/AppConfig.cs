@@ -6,6 +6,10 @@ namespace WordBucket
     {
         public static string AppName => "WordBucket";
 
+        public static string AssemblyLocation => System.Reflection.Assembly.GetExecutingAssembly().Location;
+
+        public static string WorkingDirectory => Directory.GetCurrentDirectory();
+
         public static int MainWindowHeight => 450;
 
         public static int MainWindowWidth => 600;
