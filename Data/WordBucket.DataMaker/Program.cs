@@ -8,9 +8,5 @@ namespace WordBucket.DataMaker
         {
             Application.Run<MainWindow>();
         }
-
-        public static void CreateDatabases()
-        {
-        }
     }
 }

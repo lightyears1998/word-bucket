@@ -1,4 +1,5 @@
-﻿using Terminal.Gui;
+﻿using System.Diagnostics;
+using Terminal.Gui;
 using WordBucket.DataMaker.Parsers;
 
 namespace WordBucket.DataMaker
@@ -26,13 +27,29 @@ namespace WordBucket.DataMaker
                 Y = Pos.Bottom(workingDirectoryLabel)
             };
 
-            var createDatabaseButton = new Button()
+            var openApplicationDataDirectoryButton = new Button()
             {
-                Text = "Create Database",
+                Text = "Open Application Data Directory",
                 Y = Pos.Bottom(actionHeader)
             };
 
-            createDatabaseButton.Clicked += Program.CreateDatabases;
+            openApplicationDataDirectoryButton.Clicked += () =>
+            {
+                ProcessStartInfo info = new()
+                {
+                    FileName = "explorer.exe",
+                    Arguments = AppConfig.ApplicationDataDirectory
+                };
+                Process.Start(info);
+            };
+
+            var createDatabaseButton = new Button()
+            {
+                Text = "Create Database",
+                Y = Pos.Bottom(openApplicationDataDirectoryButton)
+            };
+
+            createDatabaseButton.Clicked += AppConfig.MigrateDatabases;
 
             var parseCollinsButton = new Button()
             {
@@ -62,6 +79,7 @@ namespace WordBucket.DataMaker
             Add(assemblyLocationLabel,
                 workingDirectoryLabel,
                 actionHeader,
+                openApplicationDataDirectoryButton,
                 createDatabaseButton,
                 parseCollinsButton,
                 exitButton);

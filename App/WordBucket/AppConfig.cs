@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using Microsoft.EntityFrameworkCore;
+using System.IO;
+using WordBucket.Contexts;
 
 namespace WordBucket
 {
@@ -32,5 +34,14 @@ namespace WordBucket
         public static string[] AutoCreateDirectories => new[] { ApplicationDataDirectory };
 
         public static int HttpListenerPort => 9123;
+
+        public static void MigrateDatabases()
+        {
+            using var user = new UserContext();
+            using var dictionary = new DictionaryContext();
+
+            user.Database.Migrate();
+            dictionary.Database.Migrate();
+        }
     }
 }
