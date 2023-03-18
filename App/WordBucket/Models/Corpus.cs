@@ -9,5 +9,7 @@
         public string Uri { set; get; } = string.Empty;
 
         public string Text { set; get; } = string.Empty;
+
+        public DateTime CreatedAt { set; get; } = DateTime.Now;
     }
 }

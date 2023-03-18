@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using WordBucket.Contexts;
+using WordBucket.Models;
 
 namespace WordBucket.Services
 {
@@ -48,6 +51,31 @@ namespace WordBucket.Services
         private static string RemoveSuffix(this string word, string suffix)
         {
             return word[..^suffix.Length];
+        }
+
+        public static LearningWord GetLearningWord(Models.DictionaryEntry entry)
+        {
+            return GetLearningWord(entry.Spelling);
+        }
+
+        public static LearningWord GetLearningWord(string spelling)
+        {
+            using UserContext userContext = new UserContext();
+
+            var word = userContext.LearningWords.FirstOrDefault(word => word.Spelling == spelling);
+            if (word == null)
+            {
+                using DictionaryContext dictionaryContext = new DictionaryContext();
+                var entry = dictionaryContext.DictionaryEntries.FirstOrDefault(entry => entry.Spelling == spelling);
+
+                word = new LearningWord()
+                {
+                    Spelling = spelling,
+                    Definitions = entry?.Definitions.Replace("\\n", " ") ?? ""
+                };
+            }
+
+            return word;
         }
     }
 }

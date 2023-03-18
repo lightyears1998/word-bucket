@@ -2,35 +2,50 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:WordBucket.ViewModels"
              mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
-             x:Class="WordBucket.Views.CollectView">
+             x:Class="WordBucket.Views.CollectView"
+             x:DataType="vm:CollectViewModel">
 
   <DockPanel Margin="16">
     <Grid
       VerticalAlignment="Stretch"
       HorizontalAlignment="Stretch"
-      RowDefinitions="*, Auto, *">
-      <TextBox Grid.Row="0" AcceptsReturn="True" TextWrapping="Wrap" />
+      RowDefinitions="Auto, Auto, *">
+
+      <TextBox
+        Grid.Row="0"
+        Height="120"
+        AcceptsReturn="True"
+        TextWrapping="Wrap"
+        Text="{Binding SearchText}" />
 
       <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="16" Margin="0, 16">
-        <Button Content="查询" />
+        <Button Content="查询" Command="{Binding QueryCommand}" />
         <Button Content="收纳" />
       </StackPanel>
 
       <ScrollViewer Grid.Row="2">
-        <StackPanel Orientation="Vertical" Spacing="16">
-          <Grid ColumnDefinitions="*, Auto">
-            <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center">abandon</TextBlock>
-            <StackPanel Grid.Column="1" DockPanel.Dock="Right" Orientation="Horizontal" Spacing="16">
-              <RadioButton Content="忽略" />
-              <RadioButton Content="无" />
-              <RadioButton Content="陌生" />
-              <RadioButton Content="熟悉" />
-              <RadioButton Content="掌握" />
-            </StackPanel>
-          </Grid>
-          <TextBlock>n. 遗弃</TextBlock>
-        </StackPanel>
+        <ItemsControl Items="{Binding LearningWords}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <StackPanel Orientation="Vertical" Spacing="16">
+                <Grid ColumnDefinitions="*, Auto">
+                  <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center" Text="{Binding Spelling}" />
+
+                  <StackPanel Grid.Column="1" DockPanel.Dock="Right" Orientation="Horizontal" Spacing="16">
+                    <RadioButton IsChecked="{Binding IsIgnore}" Content="忽略" />
+                    <RadioButton IsChecked="{Binding IsNone}" Content="无" />
+                    <RadioButton IsChecked="{Binding IsUnfamiliar}" Content="陌生" />
+                    <RadioButton IsChecked="{Binding IsFamiliar}" Content="熟悉" />
+                    <RadioButton IsChecked="{Binding IsMastered}" Content="掌握" />
+                  </StackPanel>
+                </Grid>
+                <TextBlock Text="{Binding Definitions}" />
+              </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
       </ScrollViewer>
     </Grid>
   </DockPanel>
