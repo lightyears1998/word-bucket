@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Avalonia.Animation;
+using Microsoft.EntityFrameworkCore;
 using ReactiveUI;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,6 +56,15 @@ namespace WordBucket.ViewModels
         {
             QueryCommand = ReactiveCommand.Create(SearchByText);
             CollectCommand = ReactiveCommand.Create(CollectWords);
+
+            CollectorService.Instance.HttpMessageReceived += OnHttpMessageReceived;
+        }
+
+        private void OnHttpMessageReceived(object? sender, CollectorService.HttpRequestPayload payload)
+        {
+            SearchText = payload.Text.Trim();
+            CorpusSource = payload.Title.Trim();
+            CorpusUri = payload.Uri.Trim();
         }
 
         public void SearchByText()
