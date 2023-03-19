@@ -98,12 +98,18 @@ namespace WordBucket.ViewModels
                 .OrderBy(word => word.LastVisit)
                 .FirstOrDefault();
 
+            if (_word?.Progress == LearningProgress.Unfamiliar)
+            {
+                IsUnfamiliar = true;
+            }
+            else if (_word?.Progress == LearningProgress.Familiar)
+            {
+                IsFamiliar = true;
+            }
+
             _corpusIndex = 0;
             this.RaisePropertyChanged(nameof(Spelling));
             this.RaisePropertyChanged(nameof(Definitions));
-            this.RaisePropertyChanged(nameof(IsUnfamiliar));
-            this.RaisePropertyChanged(nameof(IsFamiliar));
-            this.RaisePropertyChanged(nameof(IsMastered));
             LoadNextCorpus();
         }
 
@@ -111,7 +117,7 @@ namespace WordBucket.ViewModels
         {
             if (_word != null)
             {
-                if (_word.Corpuses.Count != 0)
+                if (_word.Corpuses.Count > 0)
                 {
                     _corpusIndex %= _word.Corpuses.Count;
                     var corpus = _word.Corpuses[_corpusIndex];
@@ -124,6 +130,8 @@ namespace WordBucket.ViewModels
                     this.RaisePropertyChanged(nameof(CorpusText));
                     this.RaisePropertyChanged(nameof(CorpusSource));
                     this.RaisePropertyChanged(nameof(CorpusUri));
+
+                    _corpusIndex++;
                 }
             }
         }

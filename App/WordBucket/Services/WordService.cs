@@ -6,8 +6,15 @@ using WordBucket.Models;
 
 namespace WordBucket.Services
 {
-    public static class WordService
+    public class WordService
     {
+        private readonly UserContext _userContext;
+
+        public WordService(UserContext userContext)
+        {
+            _userContext = userContext;
+        }
+
         public static IEnumerable<string> TryLemmatize(string word)
         {
             HashSet<string> result = new() { word };
@@ -15,30 +22,30 @@ namespace WordBucket.Services
             // Nouns
             if (word.EndsWith("s"))
             {
-                result.Add(word.RemoveSuffix("s"));
+                result.Add(RemoveSuffix(word, "s"));
             }
 
             if (word.EndsWith("es"))
             {
-                result.Add(word.RemoveSuffix("es"));
+                result.Add(RemoveSuffix(word, "es"));
             }
 
             // Verbs
             if (word.EndsWith("ed"))
             {
-                result.Add(word.RemoveSuffix("ed"));
-                result.Add(word.RemoveSuffix("d"));
+                result.Add(RemoveSuffix(word, "ed"));
+                result.Add(RemoveSuffix(word, "d"));
             }
 
             if (word.EndsWith("en"))
             {
-                result.Add(word.RemoveSuffix("en"));
-                result.Add(word.RemoveSuffix("n"));
+                result.Add(RemoveSuffix(word, "en"));
+                result.Add(RemoveSuffix(word, "n"));
             }
 
             if (word.EndsWith("ing"))
             {
-                var verb = word.RemoveSuffix("ing");
+                var verb = RemoveSuffix(word, "ing");
 
                 if (verb.Length >= 2 && verb[^1] == verb[^2])
                 {
@@ -49,21 +56,19 @@ namespace WordBucket.Services
             return result;
         }
 
-        private static string RemoveSuffix(this string word, string suffix)
+        private static string RemoveSuffix(string word, string suffix)
         {
             return word[..^suffix.Length];
         }
 
-        public static LearningWord GetLearningWord(Models.DictionaryEntry entry)
+        public LearningWord GetLearningWord(Models.DictionaryEntry entry)
         {
             return GetLearningWord(entry.Spelling);
         }
 
-        public static LearningWord GetLearningWord(string spelling)
+        public LearningWord GetLearningWord(string spelling)
         {
-            using UserContext userContext = new();
-
-            var word = userContext.LearningWords
+            var word = _userContext.LearningWords
                 .Include(word => word.Corpuses)
                 .FirstOrDefault(word => word.Spelling == spelling);
 
@@ -96,7 +101,7 @@ namespace WordBucket.Services
             var level = frequencyLevelEntry.FrequencyLevel;
             if (level >= 4)
             {
-                return LearningProgress.Mastered;
+                return LearningProgress.Ignored;
             }
             if (level == 3)
             {
@@ -108,9 +113,22 @@ namespace WordBucket.Services
 
         public static void SortByLearningProgress(List<LearningWord> words)
         {
+            var getRank = (LearningProgress progress) =>
+            {
+                return progress switch
+                {
+                    LearningProgress.Ignored => 100,
+                    LearningProgress.None => 0,
+                    LearningProgress.Unfamiliar => 1,
+                    LearningProgress.Familiar => 2,
+                    LearningProgress.Mastered => 3,
+                    _ => throw new NotImplementedException(),
+                };
+            };
+
             words.Sort((a, b) =>
             {
-                return (int)((uint)a.Progress - (uint)b.Progress);
+                return getRank(a.Progress) - getRank(b.Progress);
             });
         }
     }

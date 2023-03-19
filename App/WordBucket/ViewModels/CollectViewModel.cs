@@ -11,6 +11,8 @@ namespace WordBucket.ViewModels
 {
     public class CollectViewModel : ViewModelBase
     {
+        private UserContext? _userContext;
+
         private string _searchText = string.Empty;
 
         public string SearchText
@@ -85,7 +87,11 @@ namespace WordBucket.ViewModels
                 dictionaryEntries.UnionWith(match);
             }
 
-            var words = dictionaryEntries.AsParallel().Select(WordService.GetLearningWord).ToList();
+            _userContext ??= new UserContext();
+
+            var words = dictionaryEntries
+                .Select(entry => new WordService(_userContext).GetLearningWord(entry))
+                .ToList();
             WordService.SortByLearningProgress(words);
 
             LearningWordsItem.Reload(words.Select(word => new LearningWordItem(word)));
@@ -93,7 +99,8 @@ namespace WordBucket.ViewModels
 
         public void CollectWords()
         {
-            using var userContext = new UserContext();
+            _userContext ??= new UserContext();
+
             var words = LearningWordsItem.Select(item => item.Word).Where(item => item.Progress != LearningProgress.None).ToList();
 
             if (words.Count == 0)
@@ -103,7 +110,7 @@ namespace WordBucket.ViewModels
 
             if (words.Count > 0)
             {
-                Corpus? corpus = userContext.Corpuses
+                Corpus? corpus = _userContext.Corpuses
                     .Include(corpus => corpus.LearningWords)
                     .FirstOrDefault(corpus => corpus.Text == SearchText);
                 if (corpus == null)
@@ -114,8 +121,8 @@ namespace WordBucket.ViewModels
                         Uri = CorpusUri,
                         Text = SearchText
                     };
-                    userContext.Corpuses.Add(corpus);
-                    userContext.SaveChanges();
+                    _userContext.Corpuses.Add(corpus);
+                    _userContext.SaveChanges();
                 }
 
                 int newWordCount = 0;
@@ -124,16 +131,19 @@ namespace WordBucket.ViewModels
                     if (word.Id == 0)
                     {
                         newWordCount++;
-                        userContext.LearningWords.Add(word);
-                        userContext.SaveChanges();
+                        _userContext.LearningWords.Add(word);
+                        _userContext.SaveChanges();
                     }
 
                     if (!corpus.LearningWords.Any(cWord => cWord.Spelling == word.Spelling))
                     {
                         corpus.LearningWords.Add(word);
-                        userContext.SaveChanges();
+                        _userContext.SaveChanges();
                     }
                 }
+
+                _userContext.Dispose();
+                _userContext = null;
 
                 SearchText = string.Empty;
                 LearningWordsItem.Clear();

@@ -39,7 +39,8 @@
         <TextBlock
           HorizontalAlignment="Center"
           IsVisible="{Binding ElementName=ShowDefinitionsCheckBox, Path=IsChecked}"
-          Text="{Binding Definitions}" />
+          Text="{Binding Definitions}"
+          TextWrapping="Wrap" />
 
         <!-- 语料 -->
         <TextBlock
