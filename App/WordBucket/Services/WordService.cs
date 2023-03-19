@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using WordBucket.Contexts;
 using WordBucket.Models;
@@ -62,10 +63,13 @@ namespace WordBucket.Services
         {
             using UserContext userContext = new();
 
-            var word = userContext.LearningWords.FirstOrDefault(word => word.Spelling == spelling);
+            var word = userContext.LearningWords
+                .Include(word => word.Corpuses)
+                .FirstOrDefault(word => word.Spelling == spelling);
+
             if (word == null)
             {
-                using DictionaryContext dictionaryContext = new DictionaryContext();
+                using DictionaryContext dictionaryContext = new();
                 var entry = dictionaryContext.DictionaryEntries.FirstOrDefault(entry => entry.Spelling == spelling);
 
                 word = new LearningWord()

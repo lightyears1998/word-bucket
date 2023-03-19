@@ -35,6 +35,7 @@
       <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="16" Margin="0, 16">
         <Button Content="查询" Command="{Binding QueryCommand}" />
         <Button Content="收纳" Command="{Binding CollectCommand}" />
+        <TextBlock VerticalAlignment="Center" Text="{Binding StatusLabelText}" />
       </StackPanel>
 
       <ScrollViewer Grid.Row="2">

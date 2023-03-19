@@ -34,6 +34,14 @@ namespace WordBucket.ViewModels
             set => this.RaiseAndSetIfChanged(ref _corpusUri, value);
         }
 
+        private string _statusLabelText = "准备就绪";
+
+        public string StatusLabelText
+        {
+            get => _statusLabelText;
+            set => this.RaiseAndSetIfChanged(ref _statusLabelText, value);
+        }
+
         public ICommand QueryCommand { get; }
 
         public ICommand CollectCommand { get; }
@@ -84,6 +92,11 @@ namespace WordBucket.ViewModels
             using var userContext = new UserContext();
             var words = LearningWordsItem.Select(item => item.Word).Where(item => item.Progress != LearningProgress.None).ToList();
 
+            if (words.Count == 0)
+            {
+                SearchByText();
+            }
+
             if (words.Count > 0)
             {
                 Corpus? corpus = userContext.Corpuses.FirstOrDefault(corpus => corpus.Text == SearchText);
@@ -98,19 +111,27 @@ namespace WordBucket.ViewModels
                     userContext.Corpuses.Add(corpus);
                 }
 
+                int newWordCount = 0;
                 foreach (var word in words)
                 {
                     if (word.Id == 0)
+                    {
+                        newWordCount++;
                         userContext.LearningWords.Add(word);
+                    }
 
                     if (!word.Corpuses.Any(corpus => corpus.Text == SearchText))
+                    {
                         word.Corpuses.Add(corpus);
+                        corpus.LearningWords.Add(word);
+                    }
                 }
 
                 userContext.SaveChanges();
 
                 SearchText = string.Empty;
                 LearningWordsItem.Clear();
+                StatusLabelText = $"已更新 {words.Count} 个单词（其中，新增 {newWordCount} 个单词）；1 条语料。";
             }
         }
 
