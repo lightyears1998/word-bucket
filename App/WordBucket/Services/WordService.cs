@@ -60,7 +60,7 @@ namespace WordBucket.Services
 
         public static LearningWord GetLearningWord(string spelling)
         {
-            using UserContext userContext = new UserContext();
+            using UserContext userContext = new();
 
             var word = userContext.LearningWords.FirstOrDefault(word => word.Spelling == spelling);
             if (word == null)

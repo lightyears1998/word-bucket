@@ -18,7 +18,7 @@
       <vm:CollectViewModel />
     </TabItem>
     <TabItem Header="记忆">
-      <v:MemoryView />
+      <vm:MemoryViewModel />
     </TabItem>
     <TabItem Header="词汇">
       <v:LearningWordsView />

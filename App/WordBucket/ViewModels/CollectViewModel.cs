@@ -86,27 +86,35 @@ namespace WordBucket.ViewModels
 
             if (words.Count > 0)
             {
-                var corpus = new Corpus()
+                Corpus? corpus = userContext.Corpuses.FirstOrDefault(corpus => corpus.Text == SearchText);
+                if (corpus == null)
                 {
-                    Source = CorpusSource,
-                    Uri = CorpusUri,
-                    Text = SearchText
-                };
-                foreach (var word in words)
-                {
-                    word.Corpuses.Add(corpus);
+                    corpus = new Corpus()
+                    {
+                        Source = CorpusSource,
+                        Uri = CorpusUri,
+                        Text = SearchText
+                    };
+                    userContext.Corpuses.Add(corpus);
                 }
 
-                userContext.Add(corpus);
-                userContext.AddRange(words);
-                userContext.SaveChanges();
-            }
+                foreach (var word in words)
+                {
+                    if (word.Id == 0)
+                        userContext.LearningWords.Add(word);
 
-            SearchText = string.Empty;
-            LearningWordsItem.Clear();
+                    if (!word.Corpuses.Any(corpus => corpus.Text == SearchText))
+                        word.Corpuses.Add(corpus);
+                }
+
+                userContext.SaveChanges();
+
+                SearchText = string.Empty;
+                LearningWordsItem.Clear();
+            }
         }
 
-        public class LearningWordItem
+        public class LearningWordItem : ReactiveObject
         {
             public LearningWord Word { get; set; }
 
@@ -114,39 +122,84 @@ namespace WordBucket.ViewModels
 
             public string Definitions => Word.Definitions;
 
+            private bool _isIgnore;
+
             public bool IsIgnore
             {
-                get => Word.Progress == LearningProgress.Ignored;
-                set => Word.Progress = LearningProgress.Ignored;
+                get => _isIgnore;
+                set
+                {
+                    if (this.RaiseAndSetIfChanged(ref _isIgnore, value))
+                    {
+                        Word.Progress = LearningProgress.Ignored;
+                    }
+                }
             }
+
+            private bool _isNone;
 
             public bool IsNone
             {
-                get => Word.Progress == LearningProgress.None;
-                set => Word.Progress = LearningProgress.None;
+                get => _isNone;
+                set
+                {
+                    if (this.RaiseAndSetIfChanged(ref _isNone, value))
+                    {
+                        Word.Progress = LearningProgress.None;
+                    }
+                }
             }
+
+            private bool _isUnfamiliar;
 
             public bool IsUnfamiliar
             {
-                get => Word.Progress == LearningProgress.Unfamiliar;
-                set => Word.Progress = LearningProgress.Unfamiliar;
+                get => _isUnfamiliar;
+                set
+                {
+                    if (this.RaiseAndSetIfChanged(ref _isUnfamiliar, value))
+                    {
+                        Word.Progress = LearningProgress.Unfamiliar;
+                    }
+                }
             }
+
+            private bool _isFamiliar;
 
             public bool IsFamiliar
             {
-                get => Word.Progress == LearningProgress.Familiar;
-                set => Word.Progress = LearningProgress.Familiar;
+                get => _isFamiliar;
+                set
+                {
+                    if (this.RaiseAndSetIfChanged(ref _isFamiliar, value))
+                    {
+                        Word.Progress = LearningProgress.Familiar;
+                    }
+                }
             }
+
+            private bool _isMastered;
 
             public bool IsMastered
             {
-                get => Word.Progress == LearningProgress.Mastered;
-                set => Word.Progress = LearningProgress.Mastered;
+                get => _isMastered;
+                set
+                {
+                    if (this.RaiseAndSetIfChanged(ref _isMastered, value))
+                    {
+                        Word.Progress = LearningProgress.Mastered;
+                    }
+                }
             }
 
             public LearningWordItem(LearningWord word)
             {
                 Word = word;
+                IsIgnore = Word.Progress == LearningProgress.Ignored;
+                IsNone = Word.Progress == LearningProgress.None;
+                IsUnfamiliar = Word.Progress == LearningProgress.Unfamiliar;
+                IsFamiliar = Word.Progress == LearningProgress.Familiar;
+                IsMastered = Word.Progress == LearningProgress.Mastered;
             }
         }
     }

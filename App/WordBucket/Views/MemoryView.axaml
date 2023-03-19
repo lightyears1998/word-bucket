@@ -2,12 +2,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:WordBucket.ViewModels"
              mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
-             x:Class="WordBucket.Views.MemoryView">
+             x:Class="WordBucket.Views.MemoryView"
+             x:DataType="vm:MemoryViewModel">
   <DockPanel Margin="16">
     <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center" Spacing="8" Orientation="Horizontal">
       <CheckBox x:Name="ShowDefinitionsCheckBox" Content="显示释义" />
-      <Button Content="切换语料" />
+      <Button
+        HorizontalAlignment="Center"
+        Content="切换语料"
+        Command="{Binding LoadNextCorpusCommand}" />
+      <TextBlock VerticalAlignment="Center" Text="{Binding CorpusIndicatorLabelText}" />
     </StackPanel>
 
     <StackPanel
@@ -15,18 +21,27 @@
       HorizontalAlignment="Center"
       Orientation="Horizontal"
       Spacing="16">
-      <RadioButton Content="陌生" />
-      <RadioButton Content="熟悉" />
-      <RadioButton Content="掌握" />
-      <Button Content="下一个词汇" />
+      <RadioButton IsChecked="{Binding IsUnfamiliar}" Content="陌生" />
+      <RadioButton IsChecked="{Binding IsFamiliar}" Content="熟悉" />
+      <RadioButton IsChecked="{Binding IsMastered}" Content="掌握" />
+      <Button Content="下一个词汇" Command="{Binding MoveOnToNextWordCommand}" />
     </StackPanel>
 
     <StackPanel HorizontalAlignment="Center" Spacing="32">
-      <TextBlock FontSize="64">polymorphism</TextBlock>
+      <!-- 拼写 -->
+      <TextBlock FontSize="64" Text="{Binding Spelling}" />
+
       <StackPanel Spacing="16">
-        <TextBlock IsVisible="{Binding ElementName=ShowDefinitionsCheckBox, Path=IsChecked}">n. 多态</TextBlock>
-        <TextBlock>Polymorphism is the ability of an object to take on many forms.</TextBlock>
-        <TextBlock FontStyle="Italic">Polymorphism in Dart</TextBlock>
+        <!-- 释义 -->
+        <TextBlock
+          IsVisible="{Binding ElementName=ShowDefinitionsCheckBox, Path=IsChecked}"
+          Text="{Binding Definitions}" />
+
+        <!-- 语料 -->
+        <TextBlock Text="{Binding CorpusText}" />
+
+        <!-- 语料来源 -->
+        <TextBlock FontStyle="Italic" Text="{Binding CorpusSource}" />
       </StackPanel>
     </StackPanel>
   </DockPanel>
