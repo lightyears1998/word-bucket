@@ -1,10 +1,14 @@
 ﻿using System.Diagnostics;
 using System.Net;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace WordBucket.Services
 {
     public class CollectorService : ServiceBase
     {
+        public event EventHandler<HttpRequestPayload>? HttpMessageReceived;
+
         private CollectorService()
         { }
 
@@ -44,7 +48,15 @@ namespace WordBucket.Services
                         var request = context.Request;
                         var response = context.Response;
 
-                        var responseString = "OK.";
+                        var requestBufferLength = request.ContentLength64;
+                        var requestBuffer = new byte[requestBufferLength];
+                        request.InputStream.Read(requestBuffer);
+                        var inputString = System.Text.Encoding.UTF8.GetString(requestBuffer);
+
+                        var message = JsonSerializer.Deserialize<HttpRequestPayload>(inputString)!;
+                        HttpMessageReceived?.Invoke(this, message);
+
+                        var responseString = "<html><body><p>OK!</p></body></html>";
                         var responseBuffer = System.Text.Encoding.UTF8.GetBytes(responseString);
 
                         response.ContentLength64 = responseBuffer.Length;
@@ -70,6 +82,18 @@ namespace WordBucket.Services
             _tokenSource = null;
             _httpListener = null;
             _listenerThread = null;
+        }
+
+        public record class HttpRequestPayload
+        {
+            [JsonPropertyName("title")]
+            public string Title { set; get; } = string.Empty;
+
+            [JsonPropertyName("text")]
+            public string Text { set; get; } = string.Empty;
+
+            [JsonPropertyName("uri")]
+            public string Uri { set; get; } = string.Empty;
         }
     }
 }
