@@ -34,17 +34,19 @@
 
       <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="16" Margin="0, 16">
         <Button Content="查询" Command="{Binding QueryCommand}" />
-        <Button Content="收纳" />
+        <Button Content="收纳" Command="{Binding CollectCommand}" />
       </StackPanel>
 
       <ScrollViewer Grid.Row="2">
-        <ItemsControl Items="{Binding LearningWords}">
+        <ItemsControl Items="{Binding LearningWordsItem}">
           <ItemsControl.ItemTemplate>
             <DataTemplate>
-              <StackPanel Orientation="Vertical" Spacing="16">
+              <StackPanel Orientation="Vertical">
                 <Grid ColumnDefinitions="*, Auto">
-                  <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center" Text="{Binding Spelling}" />
+                  <!-- 单词拼写 -->
+                  <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center" FontSize="24" Text="{Binding Spelling}" />
 
+                  <!-- 进度按钮 -->
                   <StackPanel Grid.Column="1" DockPanel.Dock="Right" Orientation="Horizontal" Spacing="16">
                     <RadioButton IsChecked="{Binding IsIgnore}" Content="忽略" />
                     <RadioButton IsChecked="{Binding IsNone}" Content="无" />
@@ -53,7 +55,9 @@
                     <RadioButton IsChecked="{Binding IsMastered}" Content="掌握" />
                   </StackPanel>
                 </Grid>
-                <TextBlock Text="{Binding Definitions}" />
+
+                <!-- 释义 -->
+                <TextBlock Text="{Binding Definitions}" TextWrapping="Wrap" />
               </StackPanel>
             </DataTemplate>
           </ItemsControl.ItemTemplate>

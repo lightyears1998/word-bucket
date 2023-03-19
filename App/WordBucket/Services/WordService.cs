@@ -9,7 +9,7 @@ namespace WordBucket.Services
     {
         public static IEnumerable<string> TryLemmatize(string word)
         {
-            HashSet<string> result = new();
+            HashSet<string> result = new() { word };
 
             // Nouns
             if (word.EndsWith("s"))
@@ -71,11 +71,43 @@ namespace WordBucket.Services
                 word = new LearningWord()
                 {
                     Spelling = spelling,
-                    Definitions = entry?.Definitions.Replace("\\n", " ") ?? ""
+                    Definitions = entry?.Definitions.Replace("\\n", " ") ?? "",
+                    Progress = GetDefaultLearningProgress(spelling)
                 };
             }
 
             return word;
+        }
+
+        public static LearningProgress GetDefaultLearningProgress(string spelling)
+        {
+            using var dictionary = new DictionaryContext();
+            var frequencyLevelEntry = dictionary.Collins.FirstOrDefault(entry => entry.Spelling == spelling);
+
+            if (frequencyLevelEntry == null)
+            {
+                return LearningProgress.None;
+            }
+
+            var level = frequencyLevelEntry.FrequencyLevel;
+            if (level >= 4)
+            {
+                return LearningProgress.Mastered;
+            }
+            if (level == 3)
+            {
+                return LearningProgress.Familiar;
+            }
+
+            return LearningProgress.None;
+        }
+
+        public static void SortByLearningProgress(List<LearningWord> words)
+        {
+            words.Sort((a, b) =>
+            {
+                return (int)((uint)a.Progress - (uint)b.Progress);
+            });
         }
     }
 }

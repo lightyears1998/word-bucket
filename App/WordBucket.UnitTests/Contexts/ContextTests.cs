@@ -7,10 +7,10 @@ namespace WordBucket.UnitTests.Contexts
         [Fact]
         public void Test1()
         {
-            var dictCtx = new DictionaryContext();
-            var userCtx = new UserContext();
+            using var dictionaryCtx = new DictionaryContext();
+            using var userCtx = new UserContext();
 
-            dictCtx.Database.EnsureCreated();
+            dictionaryCtx.Database.EnsureCreated();
             userCtx.Database.EnsureCreated();
         }
     }

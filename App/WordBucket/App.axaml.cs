@@ -2,6 +2,8 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using CommunityToolkit.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+using WordBucket.Contexts;
 using WordBucket.Services;
 using WordBucket.ViewModels;
 using WordBucket.Views;
@@ -47,6 +49,7 @@ public partial class App : Application
     private static void StartUp()
     {
         CreateFolders();
+        SetupDatabaseContexts();
         InitializeServices();
     }
 
@@ -71,6 +74,15 @@ public partial class App : Application
         {
             System.IO.Directory.CreateDirectory(directory);
         }
+    }
+
+    private static void SetupDatabaseContexts()
+    {
+        using var userContext = new UserContext();
+        using var dictionaryContext = new DictionaryContext();
+
+        userContext.Database.Migrate();
+        dictionaryContext.Database.Migrate();
     }
 
     private static void InitializeServices()

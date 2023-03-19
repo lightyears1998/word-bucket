@@ -1,6 +1,5 @@
 ﻿using ReactiveUI;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Windows.Input;
 using WordBucket.Contexts;
@@ -39,13 +38,12 @@ namespace WordBucket.ViewModels
 
         public ICommand CollectCommand { get; }
 
-        public ObservableCollectionEx<LearningWordItem> LearningWords { get; } = new();
+        public ObservableCollectionEx<LearningWordItem> LearningWordsItem { get; } = new();
 
         public CollectViewModel()
         {
             QueryCommand = ReactiveCommand.Create(SearchByText);
-
-            CollectCommand = ReactiveCommand.Create(() => { });
+            CollectCommand = ReactiveCommand.Create(CollectWords);
         }
 
         public void SearchByText()
@@ -75,8 +73,37 @@ namespace WordBucket.ViewModels
                 dictionaryEntries.UnionWith(match);
             }
 
-            var words = dictionaryEntries.AsParallel().Select(WordService.GetLearningWord);
-            LearningWords.Reload(words.Select(word => new LearningWordItem(word)));
+            var words = dictionaryEntries.AsParallel().Select(WordService.GetLearningWord).ToList();
+            WordService.SortByLearningProgress(words);
+
+            LearningWordsItem.Reload(words.Select(word => new LearningWordItem(word)));
+        }
+
+        public void CollectWords()
+        {
+            using var userContext = new UserContext();
+            var words = LearningWordsItem.Select(item => item.Word).Where(item => item.Progress != LearningProgress.None).ToList();
+
+            if (words.Count > 0)
+            {
+                var corpus = new Corpus()
+                {
+                    Source = CorpusSource,
+                    Uri = CorpusUri,
+                    Text = SearchText
+                };
+                foreach (var word in words)
+                {
+                    word.Corpuses.Add(corpus);
+                }
+
+                userContext.Add(corpus);
+                userContext.AddRange(words);
+                userContext.SaveChanges();
+            }
+
+            SearchText = string.Empty;
+            LearningWordsItem.Clear();
         }
 
         public class LearningWordItem
