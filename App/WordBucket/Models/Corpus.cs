@@ -1,4 +1,6 @@
-﻿namespace WordBucket.Models
+﻿using System.Collections.Generic;
+
+namespace WordBucket.Models
 {
     public record class Corpus
     {
@@ -11,5 +13,7 @@
         public string Text { set; get; } = string.Empty;
 
         public DateTime CreatedAt { set; get; } = DateTime.Now;
+
+        public List<LearningWord> LearningWords { set; get; } = new();
     }
 }
