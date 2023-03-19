@@ -29,19 +29,30 @@
 
     <StackPanel HorizontalAlignment="Center" Spacing="32">
       <!-- 拼写 -->
-      <TextBlock FontSize="64" Text="{Binding Spelling}" />
+      <TextBlock
+        HorizontalAlignment="Center"
+        FontSize="64"
+        Text="{Binding Spelling}" />
 
       <StackPanel Spacing="16">
         <!-- 释义 -->
         <TextBlock
+          HorizontalAlignment="Center"
           IsVisible="{Binding ElementName=ShowDefinitionsCheckBox, Path=IsChecked}"
           Text="{Binding Definitions}" />
 
         <!-- 语料 -->
-        <TextBlock Text="{Binding CorpusText}" />
+        <TextBlock
+          HorizontalAlignment="Center"
+          Text="{Binding CorpusText}"
+          TextWrapping="Wrap" />
 
         <!-- 语料来源 -->
-        <TextBlock FontStyle="Italic" Text="{Binding CorpusSource}" />
+        <TextBlock
+          HorizontalAlignment="Center"
+          FontStyle="Italic"
+          Text="{Binding CorpusSource}"
+          TextWrapping="Wrap" />
       </StackPanel>
     </StackPanel>
   </DockPanel>

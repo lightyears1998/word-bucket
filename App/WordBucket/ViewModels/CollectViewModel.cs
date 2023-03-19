@@ -1,4 +1,5 @@
-﻿using ReactiveUI;
+﻿using Microsoft.EntityFrameworkCore;
+using ReactiveUI;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
@@ -60,7 +61,10 @@ namespace WordBucket.ViewModels
             CorpusSource = CorpusSource.Trim();
             CorpusUri = CorpusUri.Trim();
 
-            var inputWords = SearchText.Split(" ");
+            var inputWords = SearchText
+                .Split(" ")
+                .Select(word => word.Trim().Trim(',').Trim('/').Trim(':').Trim('.').Trim('!'))
+                .Where(word => word != string.Empty);
             HashSet<string> candidateWords = new();
 
             foreach (var candidate in inputWords.AsParallel().Select(WordService.TryLemmatize))
@@ -99,7 +103,9 @@ namespace WordBucket.ViewModels
 
             if (words.Count > 0)
             {
-                Corpus? corpus = userContext.Corpuses.FirstOrDefault(corpus => corpus.Text == SearchText);
+                Corpus? corpus = userContext.Corpuses
+                    .Include(corpus => corpus.LearningWords)
+                    .FirstOrDefault(corpus => corpus.Text == SearchText);
                 if (corpus == null)
                 {
                     corpus = new Corpus()
@@ -109,6 +115,7 @@ namespace WordBucket.ViewModels
                         Text = SearchText
                     };
                     userContext.Corpuses.Add(corpus);
+                    userContext.SaveChanges();
                 }
 
                 int newWordCount = 0;
@@ -118,16 +125,15 @@ namespace WordBucket.ViewModels
                     {
                         newWordCount++;
                         userContext.LearningWords.Add(word);
+                        userContext.SaveChanges();
                     }
 
-                    if (!word.Corpuses.Any(corpus => corpus.Text == SearchText))
+                    if (!corpus.LearningWords.Any(cWord => cWord.Spelling == word.Spelling))
                     {
-                        word.Corpuses.Add(corpus);
                         corpus.LearningWords.Add(word);
+                        userContext.SaveChanges();
                     }
                 }
-
-                userContext.SaveChanges();
 
                 SearchText = string.Empty;
                 LearningWordsItem.Clear();

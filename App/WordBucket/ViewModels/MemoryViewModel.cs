@@ -1,4 +1,5 @@
-﻿using ReactiveUI;
+﻿using Microsoft.EntityFrameworkCore;
+using ReactiveUI;
 using System.Linq;
 using System.Windows.Input;
 using WordBucket.Contexts;
@@ -8,6 +9,8 @@ namespace WordBucket.ViewModels
 {
     public class MemoryViewModel : ViewModelBase
     {
+        private UserContext _userContext = new();
+
         private LearningWord? _word = null;
 
         private int _corpusIndex = 0;
@@ -16,38 +19,47 @@ namespace WordBucket.ViewModels
 
         public string Definitions => _word?.Definitions ?? string.Empty;
 
+        private bool _isUnfamiliar;
+
         public bool IsUnfamiliar
         {
-            get => _word != null && _word.Progress == LearningProgress.Unfamiliar;
+            get => _isUnfamiliar;
             set
             {
-                if (_word != null)
+                if (this.RaiseAndSetIfChanged(ref _isUnfamiliar, value))
                 {
-                    _word.Progress = LearningProgress.Unfamiliar;
+                    if (_word != null)
+                        _word.Progress = LearningProgress.Unfamiliar;
                 }
             }
         }
+
+        private bool _isFamiliar;
 
         public bool IsFamiliar
         {
-            get => _word != null && _word.Progress == LearningProgress.Familiar;
+            get => _isFamiliar;
             set
             {
-                if (_word != null)
+                if (this.RaiseAndSetIfChanged(ref _isFamiliar, value))
                 {
-                    _word.Progress = LearningProgress.Familiar;
+                    if (_word != null)
+                        _word.Progress = LearningProgress.Familiar;
                 }
             }
         }
 
+        private bool _isMastered;
+
         public bool IsMastered
         {
-            get => _word != null && _word.Progress == LearningProgress.Mastered;
+            get => _isMastered;
             set
             {
-                if (_word != null)
+                if (this.RaiseAndSetIfChanged(ref _isMastered, value))
                 {
-                    _word.Progress = LearningProgress.Mastered;
+                    if (_word != null)
+                        _word.Progress = LearningProgress.Mastered;
                 }
             }
         }
@@ -72,17 +84,16 @@ namespace WordBucket.ViewModels
 
         private void MoveOnToNextWord()
         {
-            using var userContext = new UserContext();
-
             if (_word != null)
             {
                 _word.LastVisit = DateTime.Now;
-                userContext.SaveChanges();
+                _userContext.SaveChanges();
             }
 
             LearningProgress[] filters = { LearningProgress.Unfamiliar, LearningProgress.Familiar };
 
-            _word = userContext.LearningWords
+            _word = _userContext.LearningWords
+                .Include(word => word.Corpuses)
                 .Where(word => filters.Contains(word.Progress))
                 .OrderBy(word => word.LastVisit)
                 .FirstOrDefault();
