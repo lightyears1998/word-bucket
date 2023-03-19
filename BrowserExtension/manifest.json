@@ -9,8 +9,8 @@
   },
   "browser_specific_settings": {
     "gecko": {
-      "id": "addon@wordbucket.qfstudio.net",
-      "strict_min_version": "42.0"
+      "id": "addon-v2@wordbucket.qfstudio.net",
+      "strict_min_version": "52.0"
     }
   },
   "permissions": [
