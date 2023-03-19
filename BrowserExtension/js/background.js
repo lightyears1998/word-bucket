@@ -1,4 +1,4 @@
-const remoteUrl = "http://127.0.0.1:52531";
+const remoteUrl = "http://localhost:9123";
 
 browser.contextMenus.create({
   contexts: ["all"],
@@ -6,10 +6,8 @@ browser.contextMenus.create({
   title: "Save selected text to WordBucket"
 });
 
-browser.contextMenus.onClicked.addListener((info, tab) => {
-  console.log('a', info);
-  console.log('b', tab);
-  getSelectedText(makeSaveMaterialRequest);
+browser.contextMenus.onClicked.addListener((_info, tab) => {
+  getSelectedText((text) => makeSaveMaterialRequest(text, tab.title, tab.url));
 });
 
 function getSelectedText(cb)
@@ -17,13 +15,17 @@ function getSelectedText(cb)
   browser.tabs.executeScript({ code: 'window.getSelection().toString();' }, selectedText => cb(selectedText));
 }
 
-function makeSaveMaterialRequest(text)
+function makeSaveMaterialRequest(text, title, uri)
 {
   $.ajax({
     type: "POST",
     url: remoteUrl,
-    data: { name: "Mary", text },
+    data: JSON.stringify({
+      title: String(title),
+      uri: String(uri),
+      text:  Array(text).join("\n")
+    }),
     success: () => console.log("OK!"),
-    dataType: "json"
+    contentType:"application/json; charset=utf-8"
   });
 }
