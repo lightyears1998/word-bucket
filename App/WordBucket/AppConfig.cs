@@ -21,7 +21,11 @@ namespace WordBucket
             get
             {
                 var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+#if DEBUG
+                return Path.Join(appDataFolder, $"{AppName} (Dev)");
+#else
                 return Path.Join(appDataFolder, AppName);
+#endif
             }
         }
 
