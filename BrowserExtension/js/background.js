@@ -6,13 +6,15 @@ browser.contextMenus.create({
   title: "Save selected text to WordBucket"
 });
 
-browser.contextMenus.onClicked.addListener((_info, tab) => {
-  getSelectedText((text) => makeSaveMaterialRequest(text, tab.title, tab.url));
+browser.contextMenus.onClicked.addListener((info, tab) => {
+  getSelectedText(info, (text) => makeSaveMaterialRequest(text, tab.title, tab.url));
 });
 
-function getSelectedText(cb)
+function getSelectedText(info, cb)
 {
-  browser.tabs.executeScript({ code: 'window.getSelection().toString();' }, selectedText => cb(selectedText));
+  var selectedText = info.selectionText;
+  // browser.tabs.executeScript({ code: 'window.getSelection().toString();' }, selectedText => cb(selectedText));
+  cb(selectedText);
 }
 
 function makeSaveMaterialRequest(text, title, uri)
