@@ -13,7 +13,7 @@ namespace WordBucket.Contexts
 
         public UserContext(string? dbPath = null)
         {
-            DbPath = dbPath ?? AppConfig.DefaultUserDataDbPath;
+            DbPath = dbPath ?? UserSettings.Current.UserDataDbPath ?? AppConfig.DefaultUserDataDbPath;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
