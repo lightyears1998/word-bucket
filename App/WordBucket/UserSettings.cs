@@ -7,6 +7,10 @@ namespace WordBucket
     {
         public bool MainWindowAlwaysOnTop { set; get; } = true;
 
+        public string? UserDataDbPath { set; get; } = null;
+
+        public string? DictionaryDataDbPath { set; get; } = null;
+
         public UserSettings()
         { }
 

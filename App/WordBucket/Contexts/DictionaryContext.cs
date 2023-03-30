@@ -15,7 +15,7 @@ namespace WordBucket.Contexts
 
         public DictionaryContext(string? dbPath = null)
         {
-            DbPath = dbPath ?? AppConfig.DefaultDictionaryDataDbPath;
+            DbPath = dbPath ?? UserSettings.Current.DictionaryDataDbPath ?? AppConfig.DefaultDictionaryDataDbPath;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
